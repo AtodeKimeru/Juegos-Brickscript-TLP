@@ -1,0 +1,68 @@
+{
+  "niveles": {
+    "DEFAULT": {
+      "poison_enabled": false, 
+      "powerup_duration": 0, 
+      "speed": 0.15, 
+      "clouds_enabled": false
+    }
+  }, 
+  "shapes": {
+    "PLAYER_TANK": {
+      "tipo": "PLAYER", 
+      "color": "#00FFFF", 
+      "hp": 100, 
+      "damage": 1, 
+      "chance": 10, 
+      "estados": [
+        [
+          [
+            1, 
+            1
+          ], 
+          [
+            1, 
+            1
+          ]
+        ]
+      ], 
+      "speed": 1
+    }
+  }, 
+  "tipo_juego": "TANKS", 
+  "powerups": {}, 
+  "bosses": {
+    "FINAL_FORTRESS": {
+      "color": "#FF00FF", 
+      "hp": 500, 
+      "type": "BOSS", 
+      "estados": [
+        [
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ]
+        ]
+      ]
+    }
+  }, 
+  "config": {}, 
+  "events": {
+    "ON_TARGET_SCORE_1000": {
+      "target": "1000", 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "SPAWN", 
+          "objeto": "FINAL_FORTRESS"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,63 @@
+# tetris_remake.bnf
+# Gramatica BNF extendida para BrickScript - Actividad 3
+# Retrocompatible: los atributos COLOR, CHANCE, POWERUP son opcionales
+
+<programa> ::= <tipo_juego> <grid> <definiciones> <eventos>
+
+<tipo_juego> ::= "GAME_TYPE" "TETRIS"
+<grid>       ::= "GAME_GRID" "(" <numero> "," <numero> ")"
+
+# -- Definiciones: shapes y powerups son intercalables --
+<definiciones> ::= <definicion> | <definicion> <definiciones>
+<definicion>   ::= <definicion_shape> | <definicion_powerup>
+
+# -- Shape con atributos opcionales COLOR y CHANCE --
+<definicion_shape> ::= "DEFINE" "SHAPE" <identificador> ":" <atributos_shape> <estados> "END"
+
+<atributos_shape> ::= <atributo_shape> <atributos_shape> | ""
+<atributo_shape>  ::= <atributo_color> | <atributo_chance>
+<atributo_color>  ::= "COLOR" ":" <color_hex>
+<atributo_chance> ::= "CHANCE" ":" <numero>
+<color_hex>       ::= "#" <hex_char> <hex_char> <hex_char> <hex_char> <hex_char> <hex_char>
+<hex_char>        ::= "0"..."9" | "A"..."F" | "a"..."f"
+
+<estados> ::= <estado> | <estado> <estados>
+<estado>  ::= "STATE" <numero> ":" <matriz>
+<matriz>  ::= <fila> | <fila> <matriz>
+<fila>    ::= "[" <valores_fila> "]"
+<valores_fila> ::= <numero> | <numero> "," <valores_fila>
+
+# -- Power-Up: forma especial con condiciones de activacion --
+<definicion_powerup> ::= "DEFINE" "POWERUP" <identificador> ":"
+                         <atributo_color>
+                         <condiciones>
+                         <estados>
+                         "END"
+
+<condiciones>  ::= <condicion> | <condicion> <condiciones>
+<condicion>    ::= "CONDITION" ":" <nombre_condicion> <numero>
+<nombre_condicion> ::= "LINES_CLEARED_AT_ONCE" | "L_PIECE_ROTATIONS"
+
+# -- Eventos ampliados (mismo conjunto que original) --
+<eventos>    ::= <evento> | <evento> <eventos>
+<evento>     ::= "ON" <nombre_evento> ":" <acciones> "END"
+<nombre_evento> ::= "START" | "TICK" | "LINE_CLEAR"
+                  | "KEY_UP" | "KEY_DOWN" | "KEY_LEFT" | "KEY_RIGHT"
+                  | "POWERUP_COLLECTED" | "COLLISION_WALL" | "COLLISION_SELF"
+
+<acciones>   ::= <accion> | <accion> <acciones>
+<accion>     ::= <accion_spawn> | <accion_mover> | <accion_rotar>
+               | <accion_puntos> | <accion_game_over>
+
+<accion_spawn>     ::= "SPAWN" <objetivo_spawn>
+<objetivo_spawn>   ::= "RANDOM_SHAPE" | "POWERUP"
+<accion_mover>     ::= "MOVE" "CURRENT_PIECE" <direccion>
+<accion_rotar>     ::= "ROTATE" "CURRENT_PIECE"
+<accion_puntos>    ::= "INCREASE_SCORE" <numero>
+<accion_game_over> ::= "GAME_OVER"
+
+<direccion>    ::= "LEFT" | "RIGHT" | "DOWN"
+<identificador>::= <letra> | <letra> <identificador>
+<numero>       ::= <digito> | <digito> <numero>
+<letra>        ::= "A"..."Z" | "_"
+<digito>       ::= "0"..."9"

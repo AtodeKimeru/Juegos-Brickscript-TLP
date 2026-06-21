@@ -1,0 +1,319 @@
+{
+  "niveles": {
+    "DEFAULT": {
+      "poison_enabled": false, 
+      "powerup_duration": 0, 
+      "speed": 0.15, 
+      "clouds_enabled": false
+    }
+  }, 
+  "shapes": {
+    "T_PIECE": {
+      "tipo": "RECTANGLE", 
+      "color": "#00FFFF", 
+      "hp": 1, 
+      "damage": 1, 
+      "chance": 10, 
+      "estados": [
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            0, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            0, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ]
+        ]
+      ], 
+      "speed": 1
+    }, 
+    "L_PIECE": {
+      "tipo": "RECTANGLE", 
+      "color": "#00FFFF", 
+      "hp": 1, 
+      "damage": 1, 
+      "chance": 10, 
+      "estados": [
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            1
+          ]
+        ], 
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            0, 
+            1
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            0, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            0, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            1, 
+            0, 
+            0
+          ]
+        ]
+      ], 
+      "speed": 1
+    }, 
+    "I_PIECE": {
+      "tipo": "RECTANGLE", 
+      "color": "#00FFFF", 
+      "hp": 1, 
+      "damage": 1, 
+      "chance": 10, 
+      "estados": [
+        [
+          [
+            0, 
+            1, 
+            0, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            0, 
+            0, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            0, 
+            0, 
+            0
+          ], 
+          [
+            0, 
+            0, 
+            0, 
+            0
+          ]
+        ]
+      ], 
+      "speed": 1
+    }
+  }, 
+  "tipo_juego": "TETRIS", 
+  "powerups": {}, 
+  "bosses": {}, 
+  "config": {
+    "grid_size": [
+      10, 
+      20
+    ]
+  }, 
+  "events": {
+    "ON_KEY_DOWN": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [
+            "DOWN"
+          ], 
+          "accion": "MOVE", 
+          "objeto": "CURRENT_PIECE"
+        }
+      ]
+    }, 
+    "ON_KEY_UP": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "ROTATE", 
+          "objeto": "CURRENT_PIECE"
+        }
+      ]
+    }, 
+    "ON_TICK": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [
+            "DOWN"
+          ], 
+          "accion": "MOVE", 
+          "objeto": "CURRENT_PIECE"
+        }
+      ]
+    }, 
+    "ON_LINE_CLEAR": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "INCREASE_SCORE", 
+          "objeto": "100"
+        }
+      ]
+    }, 
+    "ON_START": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "SPAWN", 
+          "objeto": "RANDOM_SHAPE"
+        }
+      ]
+    }, 
+    "ON_KEY_RIGHT": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [
+            "RIGHT"
+          ], 
+          "accion": "MOVE", 
+          "objeto": "CURRENT_PIECE"
+        }
+      ]
+    }, 
+    "ON_KEY_LEFT": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [
+            "LEFT"
+          ], 
+          "accion": "MOVE", 
+          "objeto": "CURRENT_PIECE"
+        }
+      ]
+    }
+  }
+}

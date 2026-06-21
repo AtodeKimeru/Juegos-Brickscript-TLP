@@ -1,0 +1,262 @@
+{
+  "niveles": {
+    "BABY": {
+      "poison_enabled": false, 
+      "powerup_duration": 0, 
+      "speed": 0.15, 
+      "clouds_enabled": false
+    }, 
+    "ENTHUSIAST": {
+      "poison_enabled": true, 
+      "powerup_duration": 5, 
+      "speed": 0.15, 
+      "clouds_enabled": false
+    }, 
+    "NYAN_CAT": {
+      "poison_enabled": true, 
+      "powerup_duration": 5, 
+      "speed": 0.0, 
+      "clouds_enabled": true
+    }
+  }, 
+  "shapes": {
+    "SNAKE_HEAD": {
+      "tipo": "CIRCLE", 
+      "color": "#00FFFF", 
+      "hp": 1, 
+      "damage": 1, 
+      "chance": 10, 
+      "estados": [
+        [
+          [
+            1
+          ]
+        ]
+      ], 
+      "speed": 1
+    }, 
+    "PIXEL": {
+      "tipo": "RECTANGLE", 
+      "color": "#00FFFF", 
+      "hp": 1, 
+      "damage": 1, 
+      "chance": 10, 
+      "estados": [
+        [
+          [
+            1
+          ]
+        ]
+      ], 
+      "speed": 1
+    }, 
+    "SNAKE_BODY": {
+      "tipo": "TRIANGLE", 
+      "color": "#00FFFF", 
+      "hp": 1, 
+      "damage": 1, 
+      "chance": 10, 
+      "estados": [
+        [
+          [
+            1
+          ]
+        ]
+      ], 
+      "speed": 1
+    }
+  }, 
+  "tipo_juego": "SNAKE", 
+  "powerups": {
+    "SHIELD_POWER": {
+      "color": "#FFD700", 
+      "condiciones": [
+        {
+          "tipo": "EAT_FOOD_COUNT", 
+          "valor": 5
+        }
+      ], 
+      "estados": [
+        [
+          [
+            1
+          ]
+        ]
+      ]
+    }
+  }, 
+  "bosses": {}, 
+  "config": {
+    "grid_size": [
+      18, 
+      18
+    ]
+  }, 
+  "events": {
+    "ON_HIT_CLOUD": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [
+            "SCORE"
+          ], 
+          "accion": "RESET_SCORE", 
+          "objeto": "IF"
+        }, 
+        {
+          "params": [], 
+          "accion": "0", 
+          "objeto": ":"
+        }, 
+        {
+          "params": [], 
+          "accion": "GAME_OVER", 
+          "objeto": null
+        }
+      ]
+    }, 
+    "ON_KEY_DOWN": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "SET_DIRECTION", 
+          "objeto": "DOWN"
+        }
+      ]
+    }, 
+    "ON_EAT_POISON": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "DECREASE_SCORE", 
+          "objeto": "20"
+        }
+      ]
+    }, 
+    "ON_KEY_RIGHT": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "SET_DIRECTION", 
+          "objeto": "RIGHT"
+        }
+      ]
+    }, 
+    "ON_TICK": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "MOVE", 
+          "objeto": "PLAYER"
+        }, 
+        {
+          "params": [], 
+          "accion": "FORWARD", 
+          "objeto": "END"
+        }, 
+        {
+          "params": [
+            ":"
+          ], 
+          "accion": "ON", 
+          "objeto": "EAT_FOOD"
+        }, 
+        {
+          "params": [], 
+          "accion": "INCREASE_SCORE", 
+          "objeto": "10"
+        }, 
+        {
+          "params": [
+            "1"
+          ], 
+          "accion": "GROW", 
+          "objeto": "PLAYER"
+        }, 
+        {
+          "params": [
+            "RANDOM"
+          ], 
+          "accion": "SPAWN", 
+          "objeto": "FOOD"
+        }
+      ]
+    }, 
+    "ON_COLLISION_WALL": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "GAME_OVER", 
+          "objeto": null
+        }
+      ]
+    }, 
+    "ON_COLLISION_SELF": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "GAME_OVER", 
+          "objeto": null
+        }
+      ]
+    }, 
+    "ON_START": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [
+            [
+              9, 
+              9
+            ]
+          ], 
+          "accion": "SPAWN", 
+          "objeto": "PLAYER"
+        }, 
+        {
+          "params": [
+            "RANDOM"
+          ], 
+          "accion": "SPAWN", 
+          "objeto": "FOOD"
+        }
+      ]
+    }, 
+    "ON_COLLECT_POWERUP": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "INCREASE_SCORE", 
+          "objeto": "30"
+        }
+      ]
+    }, 
+    "ON_KEY_UP": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "SET_DIRECTION", 
+          "objeto": "UP"
+        }
+      ]
+    }, 
+    "ON_KEY_LEFT": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "SET_DIRECTION", 
+          "objeto": "LEFT"
+        }
+      ]
+    }
+  }
+}

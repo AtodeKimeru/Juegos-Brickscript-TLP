@@ -1,0 +1,49 @@
+<programa> ::= <tipo_juego> <grid> <niveles_opcional> <definiciones> <eventos>
+
+<tipo_juego> ::= "GAME_TYPE" "SNAKE"
+<grid>       ::= "GAME_GRID" "(" <numero> "," <numero> ")"
+
+<niveles_opcional> ::= <bloque_niveles> | vacio
+<bloque_niveles> ::= "LEVELS" ":" <nivel> <nivel> <nivel>
+<nivel> ::= <nivel_baby> | <nivel_enthusiast> | <nivel_nyancat>
+<nivel_baby> ::= "BABY" ":" <parametros_nivel>
+<nivel_enthusiast> ::= "ENTHUSIAST" ":" <parametros_nivel>
+<nivel_nyancat> ::= "NYAN_CAT" ":" <parametros_nivel>
+<parametros_nivel> ::= "SPEED" <numero> "," "POISON_ENABLED" <booleano> "," "CLOUDS_ENABLED" <booleano> "," "POWERUP_DURATION" <numero>
+
+<booleano> ::= "YES" | "NO"
+
+<definiciones> ::= <definicion_shape> | <definicion_shape> <definiciones>
+<definicion_shape> ::= "DEFINE" "SHAPE" <identificador> [<tipo_forma>] ":" <estados> "END"
+<tipo_forma> ::= "RECTANGLE" | "CIRCLE" | "TRIANGLE"
+
+<estados> ::= <estado> | <estado> <estados>
+<estado>  ::= "STATE" <numero> ":" <matriz>
+<matriz>  ::= <fila> | <fila> <matriz>
+<fila>    ::= "[" <valores_fila> "]"
+<valores_fila> ::= <numero> | <numero> "," <valores_fila>
+
+<evento> ::= "ON" <nombre_evento_snake> ":" <acciones_snake> "END"
+<nombre_evento_snake> ::= "START" | "TICK" | "EAT_FOOD" | "EAT_POISON" | "HIT_CLOUD" | "COLLECT_POWERUP" | "COLLISION_WALL" | "COLLISION_SELF" | "KEY_UP" | "KEY_DOWN" | "KEY_LEFT" | "KEY_RIGHT"
+
+<acciones_snake> ::= <accion> | <accion> <acciones_snake>
+
+<accion> ::= <accion_spawn_jugador> | <accion_spawn_comida> | <accion_spawn_veneno> | <accion_spawn_powerup> | <accion_spawn_nube> | <accion_mover> | <accion_direccion> | <accion_puntos> | <accion_crecer> | <accion_gameover>
+
+<accion_spawn_jugador> ::= "SPAWN" "PLAYER" "AT" <coordenadas>
+<accion_spawn_comida>  ::= "SPAWN" "FOOD" "AT" "RANDOM"
+<accion_spawn_veneno>  ::= "SPAWN" "POISON_FRUIT" "AT" "RANDOM"
+<accion_spawn_powerup> ::= "SPAWN" "POWERUP" "AT" "RANDOM"
+<accion_spawn_nube>    ::= "SPAWN" "CLOUD" "AT" <coordenadas>
+<accion_mover>         ::= "MOVE" "PLAYER" "FORWARD"
+<accion_direccion>     ::= "SET_DIRECTION" <direccion>
+<accion_puntos>        ::= "INCREASE_SCORE" <numero> | "DECREASE_SCORE" <numero> | "RESET_SCORE"
+<accion_crecer>        ::= "GROW" "PLAYER" <numero>
+<accion_gameover>      ::= "GAME_OVER"
+
+<coordenadas>   ::= "(" <numero> "," <numero> ")"
+<direccion>     ::= "UP" | "DOWN" | "LEFT" | "RIGHT"
+<identificador> ::= <letra> | <letra> <identificador>
+<numero>        ::= <digito> | <digito> <numero>
+<letra>         ::= "A"..."Z" | "_"
+<digito>        ::= "0"..."9"

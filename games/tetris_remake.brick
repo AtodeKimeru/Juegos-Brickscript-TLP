@@ -1,0 +1,166 @@
+# tetris_remake.brick
+# Actividad 3 - Extension Estructural de BrickScript
+# Retrocompatible con tetris.brick original
+
+GAME_TYPE TETRIS
+
+GAME_GRID (10, 20)
+
+# ============================================================
+# PIEZAS ORIGINALES CON ROTACIONES COMPLETAS
+# ============================================================
+
+# --- I_PIECE: 4 estados completos (original solo tenia 2) ---
+DEFINE SHAPE I_PIECE:
+  COLOR: #00FFFF
+  CHANCE: 15
+  STATE 1:
+    [0, 1, 0, 0]
+    [0, 1, 0, 0]
+    [0, 1, 0, 0]
+    [0, 1, 0, 0]
+  STATE 2:
+    [0, 0, 0, 0]
+    [1, 1, 1, 1]
+    [0, 0, 0, 0]
+    [0, 0, 0, 0]
+  STATE 3:
+    [0, 0, 1, 0]
+    [0, 0, 1, 0]
+    [0, 0, 1, 0]
+    [0, 0, 1, 0]
+  STATE 4:
+    [0, 0, 0, 0]
+    [0, 0, 0, 0]
+    [1, 1, 1, 1]
+    [0, 0, 0, 0]
+END
+
+# --- L_PIECE: 4 estados (ya estaban correctos) ---
+DEFINE SHAPE L_PIECE:
+  COLOR: #FF8C00
+  CHANCE: 15
+  STATE 1:
+    [0, 1, 0]
+    [0, 1, 0]
+    [0, 1, 1]
+  STATE 2:
+    [0, 0, 0]
+    [1, 1, 1]
+    [1, 0, 0]
+  STATE 3:
+    [1, 1, 0]
+    [0, 1, 0]
+    [0, 1, 0]
+  STATE 4:
+    [0, 0, 1]
+    [1, 1, 1]
+    [0, 0, 0]
+END
+
+# --- T_PIECE: 4 estados (ya estaban correctos) ---
+DEFINE SHAPE T_PIECE:
+  COLOR: #AA00FF
+  CHANCE: 15
+  STATE 1:
+    [0, 1, 0]
+    [1, 1, 1]
+    [0, 0, 0]
+  STATE 2:
+    [0, 1, 0]
+    [0, 1, 1]
+    [0, 1, 0]
+  STATE 3:
+    [0, 0, 0]
+    [1, 1, 1]
+    [0, 1, 0]
+  STATE 4:
+    [0, 1, 0]
+    [1, 1, 0]
+    [0, 1, 0]
+END
+
+# ============================================================
+# NUEVAS FIGURAS (Actividad 3 - Punto B)
+# ============================================================
+
+# --- O_PIECE: pieza cuadrada, 1 estado (es simetrica) ---
+DEFINE SHAPE O_PIECE:
+  COLOR: #FFD700
+  CHANCE: 15
+  STATE 1:
+    [0, 1, 1, 0]
+    [0, 1, 1, 0]
+    [0, 0, 0, 0]
+    [0, 0, 0, 0]
+END
+
+# --- S_PIECE: 2 estados ---
+DEFINE SHAPE S_PIECE:
+  COLOR: #00FF00
+  CHANCE: 15
+  STATE 1:
+    [0, 1, 1]
+    [1, 1, 0]
+    [0, 0, 0]
+  STATE 2:
+    [1, 0, 0]
+    [1, 1, 0]
+    [0, 1, 0]
+END
+
+# --- Z_PIECE: 2 estados ---
+DEFINE SHAPE Z_PIECE:
+  COLOR: #FF3333
+  CHANCE: 15
+  STATE 1:
+    [1, 1, 0]
+    [0, 1, 1]
+    [0, 0, 0]
+  STATE 2:
+    [0, 0, 1]
+    [0, 1, 1]
+    [0, 1, 0]
+END
+
+# ============================================================
+# POWER-UP (Actividad 3 - Punto C)
+# Aparece tras limpiar 3 lineas en un mismo turno
+# Y haber rotado la L_PIECE al menos 10 veces
+# Es una pieza 1x1 que llena un hueco al fijarse
+# ============================================================
+DEFINE POWERUP STAR_POWER:
+  COLOR: #FF69B4
+  CONDITION: LINES_CLEARED_AT_ONCE 3
+  STATE 1:
+    [1]
+END
+
+# ============================================================
+# LOGICA Y REGLAS (identicas al original - retrocompatibilidad)
+# ============================================================
+ON START:
+  SPAWN RANDOM_SHAPE
+END
+
+ON TICK:
+  MOVE CURRENT_PIECE DOWN
+END
+
+ON LINE_CLEAR:
+  INCREASE_SCORE 100
+END
+
+# --- Controles ---
+ON KEY_LEFT:
+  MOVE CURRENT_PIECE LEFT
+END
+ON KEY_RIGHT:
+  MOVE CURRENT_PIECE RIGHT
+END
+ON KEY_DOWN:
+  MOVE CURRENT_PIECE DOWN
+END
+ON KEY_UP:
+  ROTATE CURRENT_PIECE
+END
