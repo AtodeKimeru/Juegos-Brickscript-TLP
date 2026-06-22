@@ -1,0 +1,336 @@
+BrickScript - Proyecto Final
+Manual de Usuario Tecnico
+
+Este documento explica como esta organizado el ecosistema BrickScript, como agregar
+un nuevo juego y como usar las etiquetas avanzadas soportadas por el compilador.
+
+OBJETIVO TECNICO
+
+El proyecto integra todos los juegos desarrollados en un mismo ecosistema:
+
+  1. Tetris original.
+  2. Snake original.
+  3. Tetris Remake.
+  4. Snake Evolved.
+  5. Tanks.
+
+Todos se compilan con compiler.py y se ejecutan con runtime.py. No se debe modificar
+codigo Python entre una ejecucion y otra.
+
+ESTRUCTURA DEL PROYECTO
+
+  compiler.py
+    Lee archivos .brick, valida la sintaxis y genera archivos .json.
+
+  runtime.py
+    Carga el JSON, detecta el tipo de juego y despacha al motor correcto.
+
+  jugar.bat
+    Automatiza compilacion y ejecucion:
+      jugar nombre_del_juego
+
+  games/
+    Contiene los archivos fuente .brick y los JSON generados.
+
+  gramaticas bnf/
+    Contiene las especificaciones BNF finales de cada lenguaje soportado.
+
+  runtimes/
+    Contiene los motores de ejecucion:
+      tetris_engine.py
+      tetris_remake_engine.py
+      snake_engine.py
+      snake_evolved_engine.py
+      tanks_engine.py
+
+  tests/
+    Contiene pruebas de compatibilidad, eventos y deteccion de juegos.
+
+FLUJO DE EJECUCION
+
+1. El usuario ejecuta:
+
+     jugar snake_evolved
+
+2. jugar.bat llama:
+
+     C:\Python27\python.exe .\compiler.py .\games\snake_evolved.brick
+
+3. compiler.py genera:
+
+     games/snake_evolved.json
+
+4. jugar.bat llama:
+
+     C:\Python27\python.exe .\runtime.py .\games\snake_evolved.json
+
+5. runtime.py detecta el tipo de juego y activa el motor correspondiente.
+
+COMO AGREGAR UN NUEVO JUEGO
+
+1. Crear un archivo .brick en games/.
+
+   Ejemplo:
+
+     games/mi_juego.brick
+
+2. Definir el tipo de juego.
+
+   Ejemplo:
+
+     GAME_TYPE SNAKE
+
+   Tipos actualmente soportados:
+
+     TETRIS
+     TETRIS_REMAKE
+     SNAKE
+     SNAKE_EVOLVED
+     TANKS
+
+3. Definir la grilla.
+
+   Ejemplo:
+
+     GAME_GRID (18, 18)
+
+4. Definir shapes, power-ups, niveles, bosses y eventos segun el juego.
+
+5. Si el nuevo juego pertenece a una familia existente, usar las acciones ya
+   soportadas por el motor correspondiente.
+
+6. Si requiere mecanicas nuevas, agregar soporte en:
+
+     compiler.py
+     runtime.py
+     runtimes/<motor_correspondiente>.py
+     gramaticas bnf/<archivo_correspondiente>.bnf
+     tests/
+
+7. Ejecutar:
+
+     jugar mi_juego
+
+ETIQUETAS PRINCIPALES
+
+GAME_TYPE
+
+Define la familia del juego.
+
+Ejemplo:
+
+  GAME_TYPE TANKS
+
+GAME_GRID
+
+Define el ancho y alto de la grilla.
+
+Ejemplo:
+
+  GAME_GRID (18, 18)
+
+DEFINE SHAPE
+
+Define una pieza, celda, jugador, enemigo o elemento visual.
+
+Ejemplo:
+
+  DEFINE SHAPE SNAKE_HEAD :
+    TYPE: CIRCLE
+    COLOR: #00FFFF
+    STATE 1: [1]
+  END
+
+TYPE
+
+Define la forma logica o visual del shape.
+
+Tipos usados:
+
+  RECTANGLE
+  CIRCLE
+  TRIANGLE
+  PLAYER
+  ENEMY
+  BOSS
+
+COLOR
+
+Define el color hexadecimal del elemento.
+
+Ejemplo:
+
+  COLOR: #FF0000
+
+Si falta, el compilador o runtime debe usar un color por defecto.
+
+CHANCE
+
+Define la probabilidad relativa de aparicion de un shape.
+
+Ejemplo:
+
+  CHANCE: 50
+
+Se usa especialmente en Tetris Remake para seleccionar piezas con pesos.
+
+HP
+
+Define puntos de vida. Se usa especialmente en Tanks.
+
+Ejemplo:
+
+  HP: 100
+
+Si falta, debe usarse un valor seguro por defecto.
+
+DAMAGE
+
+Define dano causado por un elemento, enemigo o proyectil.
+
+Ejemplo:
+
+  DAMAGE: 10
+
+STATE
+
+Define la matriz visual o geometrica de un shape.
+
+Ejemplo:
+
+  STATE 1: [1, 1]
+           [1, 1]
+
+LEVELS
+
+Define niveles de dificultad para Snake Evolved.
+
+Ejemplo:
+
+  LEVELS:
+    BABY: POISON_ENABLED NO, CLOUDS_ENABLED NO, POWERUP_DURATION 0
+    ENTHUSIAST: POISON_ENABLED YES, CLOUDS_ENABLED NO, POWERUP_DURATION 5
+    NYAN_CAT: SPEED 0.2, POISON_ENABLED YES, CLOUDS_ENABLED YES, POWERUP_DURATION 5
+
+Campos soportados:
+
+  SPEED
+  POISON_ENABLED
+  CLOUDS_ENABLED
+  POWERUP_DURATION
+
+Si un Snake no define niveles, el sistema debe usar un nivel por defecto.
+
+DEFINE POWERUP
+
+Define un power-up y sus condiciones de activacion.
+
+Ejemplo:
+
+  DEFINE POWERUP SHIELD_POWER :
+    COLOR: #FFD700
+    CONDITION: EAT_FOOD_COUNT 5
+    STATE 1: [1]
+  END
+
+Condiciones usadas:
+
+  EAT_FOOD_COUNT
+  LINES_CLEARED_AT_ONCE
+  L_PIECE_ROTATIONS
+
+BOSS
+
+Define un jefe para Tanks.
+
+Ejemplo:
+
+  BOSS FINAL_BOSS:
+    COLOR: #880000
+    HP: 500
+    STATE 1: [1, 1, 1]
+             [1, 1, 1]
+  END
+
+EVENTOS
+
+Los eventos definen la respuesta del juego ante acciones del usuario o del sistema.
+
+Formato:
+
+  ON EVENTO:
+    ACCION OBJETO PARAMETROS
+  END
+
+Ejemplos:
+
+  ON START:
+    SPAWN PLAYER AT (9, 9)
+    SPAWN FOOD AT RANDOM
+  END
+
+  ON TICK:
+    MOVE PLAYER FORWARD
+  END
+
+  ON EAT_FOOD:
+    INCREASE_SCORE 10
+    GROW PLAYER 1
+    SPAWN FOOD AT RANDOM
+  END
+
+Eventos comunes:
+
+  ON START
+  ON TICK
+  ON EAT_FOOD
+  ON EAT_POISON
+  ON COLLECT_POWERUP
+  ON HIT_CLOUD
+  ON COLLISION_WALL
+  ON COLLISION_SELF
+  ON KEY_UP
+  ON KEY_DOWN
+  ON KEY_LEFT
+  ON KEY_RIGHT
+  ON TARGET_SCORE
+
+Acciones comunes:
+
+  SPAWN
+  MOVE
+  ROTATE
+  SET_DIRECTION
+  GROW
+  INCREASE_SCORE
+  DECREASE_SCORE
+  RESET_SCORE
+  GAME_OVER
+
+RETROCOMPATIBILIDAD
+
+El compilador y el runtime deben aceptar juegos simples aunque no incluyan etiquetas
+avanzadas.
+
+Ejemplos:
+
+  Tetris original no debe requerir:
+    COLOR
+    CHANCE
+    POWERUP
+
+  Snake original no debe requerir:
+    LEVELS
+    OBSTACLES
+    POWERUPS
+
+  Tanks puede ignorar etiquetas que no necesita.
+
+Valores por defecto esperados:
+
+  COLOR: color por defecto del motor.
+  CHANCE: 10.
+  LEVEL: BABY o DEFAULT.
+  HP: 1 o valor seguro del motor.
+  POWERUPS: lista vacia.
+  BOSS: vacio si el juego no lo usa.

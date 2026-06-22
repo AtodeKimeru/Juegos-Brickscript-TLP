@@ -124,17 +124,13 @@ class Juego:
         self.terminado = False
         self.score = 0
         self.grid = [[0]*self.w for _ in range(self.h)]
-        self._reset_snake_state()
-        if self.timer_inv:
-            self.root.after_cancel(self.timer_inv)
-        self._ejecutar('ON_START')
-
-    def _reset_snake_state(self):
         self.serpiente = []
         self.nubes = set()
         self.comida = self.veneno = self.powerup_item = None
         self.invencible = False
-        self.comidas_contador = 0
+        if self.timer_inv:
+            self.root.after_cancel(self.timer_inv)
+        self._ejecutar('ON_START')
 
     def _loop(self):
         if self.terminado:
@@ -433,39 +429,29 @@ class Juego:
         self.canvas_pu.create_polygon(pts, fill=color, outline='#FFF')
 
     # ------------------ LOGICA SNAKE ------------------
-    def _celda_ocupada_snake(self, pos):
-        return (pos in self.serpiente or
-                pos in self.nubes or
-                pos == self.comida or
-                pos == self.veneno or
-                pos == self.powerup_item)
-
-    def _buscar_celda_libre_snake(self, exclude=None, intentos=100):
-        if exclude is None:
-            exclude = set()
-        else:
-            exclude = set(exclude)
-
-        for _ in range(intentos):
-            pos = (random.randint(0,self.w-1), random.randint(0,self.h-1))
-            if pos not in exclude and not self._celda_ocupada_snake(pos):
-                return pos
-        return None
-
     def _snake_spawn_comida(self):
-        pos = self._buscar_celda_libre_snake(exclude=[self.veneno, self.powerup_item])
-        if pos:
-            self.comida = pos
+        while True:
+            x = random.randint(0,self.w-1)
+            y = random.randint(0,self.h-1)
+            if (x,y) not in self.serpiente and (x,y) not in self.nubes:
+                self.comida = (x,y)
+                break
 
     def _snake_spawn_veneno(self):
-        pos = self._buscar_celda_libre_snake(exclude=[self.comida, self.powerup_item])
-        if pos:
-            self.veneno = pos
+        while True:
+            x = random.randint(0,self.w-1)
+            y = random.randint(0,self.h-1)
+            if (x,y) not in self.serpiente and (x,y) not in self.nubes and (x,y) != self.comida:
+                self.veneno = (x,y)
+                break
 
     def _snake_spawn_powerup(self):
-        pos = self._buscar_celda_libre_snake(exclude=[self.comida, self.veneno])
-        if pos:
-            self.powerup_item = pos
+        while True:
+            x = random.randint(0,self.w-1)
+            y = random.randint(0,self.h-1)
+            if (x,y) not in self.serpiente and (x,y) not in self.nubes and (x,y) != self.comida and (x,y) != self.veneno:
+                self.powerup_item = (x,y)
+                break
     
     def _spawn_nube_aleatoria(self):
         """Genera una nube en una posición libre (no ocupada por serpiente, comida, veneno, powerup ni otra nube).
@@ -500,7 +486,6 @@ class Juego:
             return
         head = self.serpiente[0]
         nx, ny = head[0] + self.dir[0], head[1] + self.dir[1]
-        nueva_cabeza = (nx, ny)
 
         # Pared 
         if not (0 <= nx < self.w and 0 <= ny < self.h):
@@ -523,46 +508,31 @@ class Juego:
             return   # No mover la serpiente hacia la nube
 
         # Comida normal 
-        if nueva_cabeza == self.comida:
-            self._snake_comer_comida(nueva_cabeza)
+        if (nx, ny) == self.comida:
+            self.serpiente.insert(0, (nx, ny))
+            self._ejecutar('ON_EAT_FOOD')
+            self.comidas_contador += 1
+            if self.comidas_contador >= 5 and self.pu_duracion > 0 and not self.invencible:
+                self._activar_invencible()
+                self.comidas_contador = 0
+            self.comida = None
         # Fruta venenosa 
-        elif self.poison_ena and nueva_cabeza == self.veneno:
-            self._snake_comer_veneno(nueva_cabeza)
+        elif self.poison_ena and (nx, ny) == self.veneno:
+            self.serpiente.insert(0, (nx, ny))
+            self._ejecutar('ON_EAT_POISON')
+            self.veneno = None
         # Power-up item 
-        elif self.pu_duracion > 0 and nueva_cabeza == self.powerup_item:
-            self._snake_comer_powerup(nueva_cabeza)
+        elif self.pu_duracion > 0 and (nx, ny) == self.powerup_item:
+            self.serpiente.insert(0, (nx, ny))
+            self._ejecutar('ON_COLLECT_POWERUP')
+            self._activar_invencible()
+            self.powerup_item = None
         # Movimiento normal sin comer nada 
         else:
-            self._snake_avanzar(nueva_cabeza, crecer=False)
-
-        self._respawn_elementos_snake()
-
-    def _snake_avanzar(self, nueva_cabeza, crecer):
-        self.serpiente.insert(0, nueva_cabeza)
-        if not crecer:
+            self.serpiente.insert(0, (nx, ny))
             self.serpiente.pop()
 
-    def _snake_comer_comida(self, nueva_cabeza):
-        self._snake_avanzar(nueva_cabeza, crecer=True)
-        self._ejecutar('ON_EAT_FOOD')
-        self.comidas_contador += 1
-        if self.comidas_contador >= 5 and self.pu_duracion > 0 and not self.invencible:
-            self._activar_invencible()
-            self.comidas_contador = 0
-        self.comida = None
-
-    def _snake_comer_veneno(self, nueva_cabeza):
-        self._snake_avanzar(nueva_cabeza, crecer=True)
-        self._ejecutar('ON_EAT_POISON')
-        self.veneno = None
-
-    def _snake_comer_powerup(self, nueva_cabeza):
-        self._snake_avanzar(nueva_cabeza, crecer=True)
-        self._ejecutar('ON_COLLECT_POWERUP')
-        self._activar_invencible()
-        self.powerup_item = None
-
-    def _respawn_elementos_snake(self):
+        # respawn elementos
         if self.comida is None:
             self._snake_spawn_comida()
         if self.poison_ena and self.veneno is None and random.random() < 0.1:

@@ -475,6 +475,8 @@ class Parser:
                     y = int(self.consumir())
                     self.consumir(')')
                     params.append([x, y])
+            elif verbo == 'MOVE' and self.peek() == 'FORWARD':
+                params.append(self.consumir())
             elif self.peek() not in palabras_clave and self.peek() is not None:
                 params.append(self.consumir())
             

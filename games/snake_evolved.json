@@ -135,36 +135,9 @@
         }
       ]
     }, 
-    "ON_KEY_RIGHT": {
+    "ON_EAT_FOOD": {
       "target": null, 
       "actions": [
-        {
-          "params": [], 
-          "accion": "SET_DIRECTION", 
-          "objeto": "RIGHT"
-        }
-      ]
-    }, 
-    "ON_TICK": {
-      "target": null, 
-      "actions": [
-        {
-          "params": [], 
-          "accion": "MOVE", 
-          "objeto": "PLAYER"
-        }, 
-        {
-          "params": [], 
-          "accion": "FORWARD", 
-          "objeto": "END"
-        }, 
-        {
-          "params": [
-            ":"
-          ], 
-          "accion": "ON", 
-          "objeto": "EAT_FOOD"
-        }, 
         {
           "params": [], 
           "accion": "INCREASE_SCORE", 
@@ -183,6 +156,28 @@
           ], 
           "accion": "SPAWN", 
           "objeto": "FOOD"
+        }
+      ]
+    }, 
+    "ON_KEY_RIGHT": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [], 
+          "accion": "SET_DIRECTION", 
+          "objeto": "RIGHT"
+        }
+      ]
+    }, 
+    "ON_TICK": {
+      "target": null, 
+      "actions": [
+        {
+          "params": [
+            "FORWARD"
+          ], 
+          "accion": "MOVE", 
+          "objeto": "PLAYER"
         }
       ]
     }, 
