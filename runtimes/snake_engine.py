@@ -30,6 +30,7 @@ class SnakeEngine(object):
         self.comida = None
         self._ate_food = False
 
+        print "INIT 1"
         self.root = tk.Tk()
         self.root.title("BrickScript - SNAKE")
         self.root.protocol("WM_DELETE_WINDOW", self._cerrar)
@@ -56,8 +57,11 @@ class SnakeEngine(object):
 
         self.timer_grav = 0
         self.loop_id = None
+        print "INIT 2"
         self._ejecutar('ON_START')
+        print "INIT 3"
         self._loop()
+        print "INIT 4"
 
     def _normalizar_shapes(self):
         new = {}
@@ -235,13 +239,8 @@ class SnakeEngine(object):
 
 
 def run_game(data):
-    def run_game(data):
-        print "SnakeEngine iniciado"
 
-        juego = SnakeEngine(data)
+    juego = SnakeEngine(data)
 
-        print "SnakeEngine creado"
-
-        juego.root.mainloop()
-
-        print "mainloop terminado"
+    juego.root.mainloop()
+    

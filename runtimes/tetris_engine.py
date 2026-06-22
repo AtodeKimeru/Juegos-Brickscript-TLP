@@ -246,4 +246,7 @@ class TetrisEngine(object):
 
 
 def run_game(data):
-    TetrisEngine(data)
+    
+    juego = TetrisEngine(data)
+
+    juego.root.mainloop()

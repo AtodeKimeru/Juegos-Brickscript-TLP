@@ -41,17 +41,22 @@ def main():
     with open(sys.argv[1], "r") as f:
         data = json.load(f)
 
+
+    print "TIPO_JUEGO JSON =", data.get("tipo_juego")
     game = detect_game(data)
+    print "DETECTADO =", game
 
     if game == "TETRIS":
         run_tetris(data)
     elif game == "TETRIS_REMAKE":
         run_tetris_remake(data)
     elif game == "SNAKE":
+        print "Lanzando SNAKE"
         run_snake(data)
     elif game == "SNAKE_EVOLVED":
         run_snake_evolved(data)
     elif game == "TANKS":
+        print "Lanzando TANKS"
         run_tanks(data)
     else:
         print "GAME_TYPE no soportado:", data.get("tipo_juego")
